@@ -1,0 +1,6 @@
+@ServiceOrderManager.Api_HostAddress = http://localhost:5098
+
+GET {{ServiceOrderManager.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
