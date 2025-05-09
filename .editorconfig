@@ -1,0 +1,30 @@
+# .editorconfig para projetos C#
+root = true
+
+[*.cs]
+charset = utf-8-bom
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# Organiza 'usings' com System no topo e separados
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+
+# Quebras de linha
+csharp_new_line_before_open_brace = all
+csharp_preserve_single_line_statements = false
+
+# Estilo de indentação
+csharp_indent_switch_labels = true
+
+# Preferência para uso de 'var'
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_elsewhere = false:suggestion
+
+# Expressões bodied (preferência por métodos com corpo completo)
+csharp_style_expression_bodied_methods = false:suggestion
+
+# Sempre usar chaves em blocos (if, while, etc.)
+csharp_prefer_braces = true:suggestion
