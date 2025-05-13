@@ -1,0 +1,38 @@
+name: Build and Publish Artifacts
+
+description: Compila a solução e publica os artefatos necessários para o deploy.
+
+on:
+  push:
+    branches: [ dev, main ]
+  pull_request:
+    branches: [ dev, main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build Solution and Publish Artifacts
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restaurar dependências
+        run: dotnet restore
+
+      - name: Compilar solução
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Publicar projeto API
+        run: dotnet publish ./ServiceOrderManager.Api/ServiceOrderManager.Api.csproj -c Release -o ./publish
+
+      - name: Upload dos artefatos
+        uses: actions/upload-artifact@v4
+        with:
+          name: publish-artifacts
+          path: ./publish

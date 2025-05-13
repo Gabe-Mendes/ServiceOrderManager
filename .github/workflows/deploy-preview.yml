@@ -1,0 +1,37 @@
+name: Deploy Preview
+
+description: Deploy para ambiente de preview (homologação) após push na branch dev.
+
+on:
+  pull_request:
+    branches: [ dev ]
+
+jobs:
+  deploy-preview:
+    name: Deploy para Ambiente de Preview
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restaurar dependências
+        run: dotnet restore
+
+      - name: Build da API
+        run: dotnet build ./ServiceOrderManager.Api/ServiceOrderManager.Api.csproj --configuration Release --no-restore
+
+      - name: Publicar para Preview
+        run: dotnet publish ./ServiceOrderManager.Api/ServiceOrderManager.Api.csproj --configuration Release --output ./preview
+
+      - name: Upload para ambiente de preview (exemplo)
+        run: |
+          echo "Simulação de deploy para ambiente de preview (homologação)"
+          # Aqui você poderia usar rsync, SCP, SFTP ou uma action específica de cloud
+
+      # Exemplo real com GitHub Pages, S3 ou Azure Web App pode ser usado conforme o destino
