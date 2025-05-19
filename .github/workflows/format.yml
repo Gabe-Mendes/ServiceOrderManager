@@ -27,7 +27,7 @@ jobs:
         run: dotnet restore
 
       - name: 🔧 Formatar código
-        run: dotnet format --folder --verbosity detailed
+        run: dotnet format ServiceOrderManager.sln --verbosity detailed
 
       - name: 📤 Commit de alterações de formatação
         run: |
