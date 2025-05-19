@@ -5,10 +5,12 @@ name: 🔧 Format Code
 description: Formatação automática de código para manter o estilo consistente.
 
 on:
-  pull_request:
-    branches: [ main, develop ]
   push:
-    branches: [ develop ]
+    branches: '**' #  Qualquer branch
+  pull_request:
+    branches: 
+     - main
+
 
 jobs:
   format:
@@ -17,6 +19,8 @@ jobs:
     steps:
       - name: 🔽 Checkout do código
         uses: actions/checkout@v3
+        with: 
+          fetch-depth: 0 # Garante que o histórico completo do repositório seja baixado
 
       - name: 🧰 Instalar .NET
         uses: actions/setup-dotnet@v3
@@ -27,7 +31,11 @@ jobs:
         run: dotnet restore
 
       - name: 🔧 Formatar código
-        run: dotnet format ServiceOrderManager.sln --verbosity detailed
+        run: |
+          dotnet format ./ServiceOrderManager.Api/ServiceOrderManager.Api.csproj --verbosity detailed
+          dotnet format ./ServiceOrderManager.Application/ServiceOrderManager.Application.csproj --verbosity detailed
+          dotnet format ./ServiceOrderManager.Domain/ServiceOrderManager.Domain.csproj --verbosity detailed
+          dotnet format ./ServiceOrderManager.Infrastructure/ServiceOrderManager.Infrastructure.csproj --verbosity detailed
 
       - name: 📤 Commit de alterações de formatação
         run: |
@@ -35,6 +43,7 @@ jobs:
           git config user.email "github-actions@github.com"
           git add .
           git diff --cached --quiet || git commit -m "🧹 Ajustes automáticos de formatação"
-          git push
+          git push origin HEAD:${{ github.ref_name }}
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
