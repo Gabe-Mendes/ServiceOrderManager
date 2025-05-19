@@ -1,0 +1,31 @@
+name: .NET CI
+
+description: Integração contínua para projetos .NET, incluindo formatação, linting e execução de testes.
+
+on:
+  push:
+    branches: [ develop, main ]
+  pull_request:
+    branches: [ develop, main ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v3
+
+    - name: Instalar .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restaurar pacotes
+      run: dotnet restore
+
+    - name: Compilar solução
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Executar testes
+      run: dotnet test --no-build --configuration Release --verbosity normal

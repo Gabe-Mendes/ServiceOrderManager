@@ -1,0 +1,46 @@
+# .github/workflows/format.yml
+
+name: 🔧 Format Code
+
+description: Formatação automática de código para manter o estilo consistente.
+
+on:
+  push:
+    branches: '**' #  Qualquer branch
+  pull_request:
+    branches: 
+     - main
+
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔽 Checkout do código
+        uses: actions/checkout@v3
+        with: 
+          fetch-depth: 0 # Garante que o histórico completo do repositório seja baixado
+
+      - name: 🧰 Instalar .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: 📦 Restaurar pacotes
+        run: dotnet restore
+
+      - name: 🔧 Formatar código
+        run: |
+          dotnet format ./ServiceOrderManager.Api/ServiceOrderManager.Api.csproj --verbosity detailed
+          dotnet format ./ServiceOrderManager.Application/ServiceOrderManager.Application.csproj --verbosity detailed
+          dotnet format ./ServiceOrderManager.Domain/ServiceOrderManager.Domain.csproj --verbosity detailed
+          dotnet format ./ServiceOrderManager.Infrastructure/ServiceOrderManager.Infrastructure.csproj --verbosity detailed
+
+      - name: 📤 Commit de alterações de formatação
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git diff --cached --quiet || git commit -m "🧹 Ajustes automáticos de formatação"
+          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}

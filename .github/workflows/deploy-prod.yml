@@ -1,0 +1,39 @@
+name: Deploy Produção
+
+description: Deploy da aplicação para o ambiente de produção após push na branch main.
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy-prod:
+    name: Deploy para Produção
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restaurar dependências
+        run: dotnet restore
+
+      - name: Build da API
+        run: dotnet build ./ServiceOrderManager.Api/ServiceOrderManager.Api.csproj --configuration Release --no-restore
+
+      - name: Publicar a aplicação
+        run: dotnet publish ./ServiceOrderManager.Api/ServiceOrderManager.Api.csproj --configuration Release --output ./publish
+
+      - name: Deploy para Produção
+        run: |
+          echo "Iniciando deploy para produção..."
+          # Substitua abaixo pelo método real de publicação:
+          # - Azure Web App (usando Azure CLI ou action)
+          # - AWS (via S3, ECS, Beanstalk, etc.)
+          # - Docker + Kubernetes
+          # - FTP/SFTP

@@ -1,0 +1,37 @@
+# Arquivo: .github/workflows/lint.yml
+
+name: ✨ Lint
+
+description: Análise de código para detecção de problemas de estilo, padrões e uso.
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  lint:
+    name: 📄 Análise de Estilo de Código
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📂 Checkout do código
+        uses: actions/checkout@v4
+
+      - name: ♻️ Instalar SDK .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: 🔄 Restaurar pacotes
+        run: dotnet restore
+
+      - name: ⚡️ Rodar Análise de Código
+        run: dotnet build -warnaserror
+
+      - name: 🔍 Analisar com Roslyn Analyzers (se houver)
+        run: dotnet build --no-restore --no-incremental
