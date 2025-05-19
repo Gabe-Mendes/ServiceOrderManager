@@ -43,7 +43,4 @@ jobs:
           git config user.email "github-actions@github.com"
           git add .
           git diff --cached --quiet || git commit -m "🧹 Ajustes automáticos de formatação"
-          git push origin HEAD:${{ github.ref_name }}
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
